@@ -26,13 +26,18 @@ typedef struct  s_redirection
 
 typedef struct s_line_splited
 {
-    char **cmd;
-    char **env;
-    t_redirection *redirection;
-    char **myenv;
+    char    **cmd;
+    char    **env;
+    t_redirection   *redirection;
     struct s_line_splited *next;
-    
-} t_line_splited;
+}   t_line_splited;
+
+// set pwd every time 
+typedef struct env_track
+{
+    char **myenv;
+    char *pwd;
+} t_env_track;
 
 
 typedef struct Pipe_track
@@ -145,10 +150,11 @@ void free_all(t_pipe_track * p_track);
 void free_array(t_pipe_track *p);
 int open_heredoc(t_redirection *file);
 void close_all(t_pipe_track *p);
-void open_pipes(t_pipe_track *p);
+void open_pipes(t_pipe_track *p, t_line_splited *head);
 void case_failed_parsing_files(t_pipe_track *p_track, t_line_splited **par);
 void case_middle_built_in(t_line_splited *par, int infile, int outfile, t_pipe_track *p_track);
 void case_middle_executable(t_line_splited *par, int infile, int outfile, t_pipe_track *p_track, char *path_variable);
 void case_middle(t_line_splited *par, t_pipe_track *p_track, int infile, int outfile);
 void case_last(t_line_splited *par, t_pipe_track *p_track, int infile, int outfile);
+
 #endif

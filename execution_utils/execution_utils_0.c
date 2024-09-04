@@ -82,4 +82,3 @@ char *ft_strdup(char *str)
     cp[i] = '\0';
     return(cp);
 }
-

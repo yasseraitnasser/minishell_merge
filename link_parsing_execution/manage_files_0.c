@@ -23,6 +23,7 @@ int case_input(t_line_splited *par, int *outfile, int* infile)
     return(0);
 }
 
+//remove heredo file
 int case_heredoc(t_line_splited *par, int *infile)
 {
     int fd;
@@ -73,7 +74,7 @@ int parse_files(t_line_splited *par, int *outfile, int *infile)
 {
     while(par->redirection)
     {
-        if(par->redirection->redirection_type == 1)//unput
+        if(par->redirection->redirection_type == 1)//input
         {
             if(case_input(par, outfile, infile) == -1)
                 return(-1);

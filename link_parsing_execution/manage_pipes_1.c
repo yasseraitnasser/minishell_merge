@@ -1,5 +1,5 @@
 #include "../minishell.h"
-
+//run every command in a processenv
 void case_failed_parsing_files(t_pipe_track *p_track, t_line_splited **par)
 {
     if(p_track->nb_pipes == 0)

@@ -90,17 +90,20 @@ void ft_pwd(int fd)
 {
     char *value_pwd;
 
-    if(environ == NULL)
-    {
-        //!PWD IS UNSET
-    }
+    // if(environ == NULL)
+    // {
+    //     //!PWD IS UNSET
+    // }
     value_pwd = return_value_env_if_exists("PWD");
-    if(value_pwd == NULL)
-    {
-        //!PWD IS UNSET
-    }
-    else
+    // if(value_pwd == NULL)
+    // {
+    //     //!PWD IS UNSET
+    // }
+    // else
+    // {
         ft_putstr(value_pwd, fd);
+        write(fd,"\n", 1);
+    // }
     free(value_pwd);
 }
 

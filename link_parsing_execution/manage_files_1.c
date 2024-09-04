@@ -1,5 +1,6 @@
 #include "../minishell.h"
 
+//pay attention to leak join
 int open_heredoc(t_redirection *file)
 {
     int fd;
@@ -42,7 +43,23 @@ void close_all(t_pipe_track *p)
     }
 }
 
-void open_pipes(t_pipe_track *p)
+void    close_previous_pipes_and_free(t_pipe_track *p, int i)
+{
+    int j;
+
+    j = 0;
+    while (j < i)
+    {
+        close(p->fd[i][0]);
+        close(p->fd[i][1]);
+        free(p->fd[i]);
+        j++;
+    }
+    free(p->fd);
+    free(p);
+}
+
+void open_pipes(t_pipe_track *p, t_line_splited *head)
 {
     int i;
     
@@ -51,9 +68,11 @@ void open_pipes(t_pipe_track *p)
     {
         if(pipe(p->fd[i]) == -1)
         {
-            printf("!free and exit");
+            free_everything(head);
+            close_previous_pipes_and_free(p, i);
+            printf("pipe failed\n");
+            exit(-1);
         }
         i++;
     }
-    
 }

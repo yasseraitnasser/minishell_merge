@@ -34,7 +34,6 @@ void case_first(t_line_splited *par, t_pipe_track *p_track, int infile, int outf
     }
     else
         case_first_builtin(par, outfile, p_track);
-
 }
 
 void loop_over_nodes(t_pipe_track* p_track, t_line_splited **par, int infile, int outfile)
@@ -70,7 +69,7 @@ void execution(t_line_splited *par)
     p_track = malloc(sizeof(t_pipe_track));
     p_track->nb_pipes = list_size(par) - 1;
     allocate_array(p_track);
-    open_pipes(p_track);
+    open_pipes(p_track, par);
     p_track->i = 0;
     while(par)
     {

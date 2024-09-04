@@ -88,10 +88,8 @@ void add_var_if_not_exist(char *new_var, int size, int added, int check)
 char* return_value(char *full_var)
 {
     int i;
-    char *value;
 
     i = 0;
-    value = NULL;
     while(!full_var && full_var[i] != '\0' && full_var[i] != '=')
     {
         // printf("%c", full_var[i]);

@@ -23,9 +23,9 @@ int	main(int argc, char **argv, char **env)
             {
                 execution(head);
                 free_everything(head);
-				//display_and_free(head, env);
+				// display_and_free(head, env);
             }
-            
+
 		}
 	}
 	else

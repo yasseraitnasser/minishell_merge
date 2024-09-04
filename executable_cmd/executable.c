@@ -81,7 +81,7 @@ int search_cmd(char *cmd, char **path_variable)
         check = is_cmd_present(paths, cmd, path_variable);
         if(check == -1)
         {
-            perror(NULL); //! Command 'cmd' not found
+            printf("%s: command not found\n", cmd);
             return(-1);
         }
         else
@@ -114,6 +114,10 @@ void child_process(t_line_splited* par, int infile, int outfile, char *path_vari
             exit(-1);
         }
         execve(path_variable, par->cmd, environ);
+        // exit(12);
+
         printf("error in execve\n");
+        // exit
     }
+
 }
