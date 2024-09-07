@@ -1,16 +1,16 @@
 #include "../minishell.h"
 
-void free_array(t_pipe_track *p)
+void free_array(t_cmd_track *c_track)
 {
     int i;
 
     i = 0;
-    while(i < p->nb_pipes)
+    while(i < c_track->nb_pipes)
     {
-        free(p->fd[i]);
+        free(c_track->fd[i]);
         i++;
     }
-    free(p->fd);
+    free(c_track->fd);
 }
 
 // void free_matrix(char **str)
@@ -26,10 +26,10 @@ void free_array(t_pipe_track *p)
 //     free(str);
 // }
 
-void free_all(t_pipe_track * p_track)
+void free_all(t_cmd_track * c_track)
 {
-    free_array(p_track);
-    free(p_track);
+    free_array(c_track);
+    // free(c_track);
 }
 
 // void free_nodes(void *pt)

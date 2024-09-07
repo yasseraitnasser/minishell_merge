@@ -35,14 +35,17 @@ typedef struct s_line_splited
 } t_line_splited;
 
 
-typedef struct Pipe_track
+typedef struct cmd_track
 {
     int **fd;
     int i;
     int nb_pipes;
     int cmd_type;
     char *path_variable;
-} t_pipe_track;
+    char **myenv;
+    int exit_value;
+
+} t_cmd_track;
 
 //parsing
 int		parsing(char *line, t_line_splited **head, char **env);
@@ -104,17 +107,17 @@ char *ft_join(char *str1, char *str2);
 char *ft_strdup(char *str);
 // void free_matrix(char **str);
 int check_if_append(char *new_var);
-int check_if_add_change_append(t_line_splited *par,char *new_var, int max, int *count);
-char **handle_variables(t_line_splited *par);
+int check_if_add_change_append(t_line_splited *head,char *new_var, int max, int *count);
+char **handle_variables(t_line_splited *head);
 char *return_key(char* str);
-int count_new_variables(t_line_splited *par, int size);
+int count_new_variables(t_line_splited *head, int size);
 char *to_append(char *str);
 char **create_copy(char **str, int *size);
 int size_env(char **env);
-void loop(t_line_splited *par, int size_env, char **export, char **cpy_env);
-char **sort_env(t_line_splited *par, char **export);
+void loop(t_line_splited *head, int size_env, char **export, char **cpy_env);
+char **sort_env(t_line_splited *head, char **export);
 void add_var_if_not_exist(char *new_var, int size, int added, int check);
-int check_if_var_reapeated(t_line_splited *par, char *new_var);
+int check_if_var_reapeated(t_line_splited *head, char *new_var);
 void ft_putstr_exp(char *str, int fd);
 char *add_non_existing_append_var(char *new_var);
 void change_or_append_var_value(char *new_var, int check);
@@ -124,31 +127,31 @@ char *ft_strncpy(char *str1, char *str2, int n);
 char	*get_next_line(int fd);
 char	*ft_strcpy(char *dest, const char *src);
 char	*free_and_join(char **reserve, char *buff);
-int search_cmd(char *cmd, char **path_variable);
-void child_process(t_line_splited* par, int infile, int outfile, char *path_variable);
-void redirect_cmd(t_line_splited *par, int type, int outfile);
-int cmdType(t_line_splited *par);
-void ft_echo(t_line_splited *par, int fd);
+int search_cmd(char *cmd, char **path_variable, t_cmd_track *cmd_track);
+void child_process(t_line_splited* head, int infile, int outfile, char *path_variable);
+void redirect_cmd(t_line_splited *head, int type, int outfile, t_cmd_track *c_track);
+int cmdType(t_line_splited *head);
+void ft_echo(t_line_splited *head, int fd, t_cmd_track *c_track);
 void ft_env(int fd);
 void ft_pwd(int fd);
-void ft_unset(t_line_splited *par);
-void ft_cd(t_line_splited *par, int output);
+void ft_unset(t_line_splited *head);
+void ft_cd(t_line_splited *head, int output);
 void ft_exit();
-void ft_export(t_line_splited *par, int foutput);
-void allocate_array(t_pipe_track *p);
-int parse_files(t_line_splited *par, int *outfile, int *infile);
+void ft_export(t_line_splited *head, int foutput);
+int allocate_array(t_cmd_track *c_track);
+int parse_files(t_line_splited *head, int *outfile, int *infile);
 char	*ft_strchrr(char *s, int c);
 int		ft_strncmpp(char *s1, char *s2, unsigned int n);
-void execution(t_line_splited *par);
-void free_all(t_pipe_track * p_track);
+void execution(t_line_splited *head, t_cmd_track *c_track);
+void free_all(t_cmd_track * c_track);
 //handle_errors
-void free_array(t_pipe_track *p);
+void free_array(t_cmd_track *c_track);
 int open_heredoc(t_redirection *file);
-void close_all(t_pipe_track *p);
-void open_pipes(t_pipe_track *p);
-void case_failed_parsing_files(t_pipe_track *p_track, t_line_splited **par);
-void case_middle_built_in(t_line_splited *par, int infile, int outfile, t_pipe_track *p_track);
-void case_middle_executable(t_line_splited *par, int infile, int outfile, t_pipe_track *p_track, char *path_variable);
-void case_middle(t_line_splited *par, t_pipe_track *p_track, int infile, int outfile);
-void case_last(t_line_splited *par, t_pipe_track *p_track, int infile, int outfile);
+void close_all(t_cmd_track *c_track);
+int open_pipes(t_cmd_track *c_track);
+void case_failed_parsing_files(t_cmd_track *c_track, t_line_splited **head);
+void case_middle_built_in(t_line_splited *head, int infile, int outfile, t_cmd_track *c_track);
+void case_middle_executable(t_line_splited *head, int infile, int outfile, t_cmd_track *c_track, char *path_variable);
+void case_middle(t_line_splited *head, t_cmd_track *c_track, int infile, int outfile);
+void case_last(t_line_splited *head, t_cmd_track *c_track, int infile, int outfile);
 #endif

@@ -6,7 +6,14 @@ int	main(int argc, char **argv, char **env)
 {
 	char			*line;
 	t_line_splited	*head;
+    t_cmd_track 	*c_track;
 
+	c_track = malloc(sizeof(t_cmd_track));
+    if(c_track == NULL)
+    {
+		//!handle this
+	}
+	c_track->exit_value = 0;
 	(void)argv;
 	if (argc == 1)
 	{
@@ -21,7 +28,7 @@ int	main(int argc, char **argv, char **env)
 			add_history(line);
 			if (!parsing(line, &head, env))
             {
-                execution(head);
+                execution(head, c_track);
                 free_everything(head);
 				//display_and_free(head, env);
             }

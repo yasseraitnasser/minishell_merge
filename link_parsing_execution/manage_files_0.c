@@ -1,18 +1,18 @@
 
 #include "../minishell.h"
 
-int case_input(t_line_splited *par, int *outfile, int* infile)
+int case_input(t_line_splited *head, int *outfile, int* infile)
 {
     if(*infile != 0)
         close(*infile);
-    *infile = open(par->redirection->file_limiter, O_RDONLY, 0744);
+    *infile = open(head->redirection->file_limiter, O_RDONLY, 0744);
     if(*infile == -1 )
     {
-        while(par->redirection)
+        while(head->redirection)
         {
-            if(par->redirection->redirection_type == 2)//input heredoc
-                *infile = open_heredoc(par->redirection);
-            par->redirection = par->redirection->next;
+            if(head->redirection->redirection_type == 2)//input heredoc
+                *infile = open_heredoc(head->redirection);
+            head->redirection = head->redirection->next;
             unlink("heredoc");
         }
         perror(NULL); //add filename like bash
@@ -23,13 +23,13 @@ int case_input(t_line_splited *par, int *outfile, int* infile)
     return(0);
 }
 
-int case_heredoc(t_line_splited *par, int *infile)
+int case_heredoc(t_line_splited *head, int *infile)
 {
     int fd;
 
     if(*infile != 0)
         close(*infile);           
-    *infile = open_heredoc(par->redirection);
+    *infile = open_heredoc(head->redirection);
     if(*infile == -1)
     {
         perror(NULL); //add filename like bash
@@ -42,11 +42,11 @@ int case_heredoc(t_line_splited *par, int *infile)
     return(0);
 }
 
-int case_normal_output(t_line_splited *par, int *outfile)
+int case_normal_output(t_line_splited *head, int *outfile)
 {
     if(*outfile != 1)
         close(*outfile);
-    *outfile = open(par->redirection->file_limiter, O_CREAT | O_RDWR | O_TRUNC, 0744);
+    *outfile = open(head->redirection->file_limiter, O_CREAT | O_RDWR | O_TRUNC, 0744);
     if(*outfile == -1)
     {
         perror(NULL); //add filename like bash
@@ -55,11 +55,11 @@ int case_normal_output(t_line_splited *par, int *outfile)
     return(0);
 }
 
-int case_append_output(t_line_splited *par, int *outfile)
+int case_append_output(t_line_splited *head, int *outfile)
 {
     if(*outfile != 1)
         close(*outfile);
-    *outfile = open(par->redirection->file_limiter, O_CREAT | O_RDWR | O_APPEND, 0744);
+    *outfile = open(head->redirection->file_limiter, O_CREAT | O_RDWR | O_APPEND, 0744);
     if(*outfile == -1)
     {
         perror(NULL); //add filefile_limiter like bash
@@ -69,31 +69,31 @@ int case_append_output(t_line_splited *par, int *outfile)
 }
 
 //if there is input file without < then others with it we take that first
-int parse_files(t_line_splited *par, int *outfile, int *infile)
+int parse_files(t_line_splited *head, int *outfile, int *infile)
 {
-    while(par->redirection)
+    while(head->redirection)
     {
-        if(par->redirection->redirection_type == 1)//unput
+        if(head->redirection->redirection_type == 1)//unput
         {
-            if(case_input(par, outfile, infile) == -1)
+            if(case_input(head, outfile, infile) == -1)
                 return(-1);
         }
-        else if(par->redirection->redirection_type == 2)//input heredoc
+        else if(head->redirection->redirection_type == 2)//input heredoc
         {
-            if(case_heredoc(par, infile) == -1)
+            if(case_heredoc(head, infile) == -1)
                 return(-1);
         }
-        else if(par->redirection->redirection_type == 3)//output
+        else if(head->redirection->redirection_type == 3)//output
         {
-            if(case_normal_output(par, outfile) == -1)
+            if(case_normal_output(head, outfile) == -1)
                 return(-1);
         }
-        else if(par->redirection->redirection_type == 4)//output append
+        else if(head->redirection->redirection_type == 4)//output append
         {
-            if(case_append_output(par, outfile) == -1)
+            if(case_append_output(head, outfile) == -1)
                 return(-1);
         }
-        par->redirection = par->redirection->next;
+        head->redirection = head->redirection->next;
     }
     return(0);
 }

@@ -28,7 +28,6 @@ int is_cmd_present(char **paths, char *cmd, char **path_variable)
             *path_variable = cmd;
         else
         {
-            // free());
             return(-1);
         }
     }
@@ -55,7 +54,7 @@ int is_cmd_present(char **paths, char *cmd, char **path_variable)
     return(-1);
 }
 
-int search_cmd(char *cmd, char **path_variable)
+int search_cmd(char *cmd, char **path_variable, t_cmd_track *c_track)
 {
 
     int check;
@@ -65,9 +64,8 @@ int search_cmd(char *cmd, char **path_variable)
     full_path = find_path();
     if(full_path == NULL)
     {
-        write(1, "r\n", 2);
-        return (-1);
-    // handle_error(); //! bash: cmd: No such file or directory
+        printf("bash: %s: No such file or directory\n", cmd);
+        c_track->exit_value = 127;
     }
     else
     {
@@ -81,7 +79,8 @@ int search_cmd(char *cmd, char **path_variable)
         check = is_cmd_present(paths, cmd, path_variable);
         if(check == -1)
         {
-            perror(NULL); //! Command 'cmd' not found
+            printf("%s: command not found\n", cmd);
+            c_track->exit_value = 127;
             return(-1);
         }
         else
@@ -90,17 +89,16 @@ int search_cmd(char *cmd, char **path_variable)
     return (-1);
 }
 
-void child_process(t_line_splited* par, int infile, int outfile, char *path_variable)
+void child_process(t_line_splited* head, int infile, int outfile, char *path_variable)
 {
     int id;
 
     id = fork();
     if(id == -1)
     {
-        write(1, "error\n", 6);
-        // handle_error(); //!free if you have sth to
+        printf("error in fork\n");
+        free_everything(head);
     }
-
     if(id == 0)
     {
         if(dup2(infile, STDIN_FILENO) == -1)
@@ -113,7 +111,7 @@ void child_process(t_line_splited* par, int infile, int outfile, char *path_vari
             perror(NULL);
             exit(-1);
         }
-        execve(path_variable, par->cmd, environ);
+        execve(path_variable, head->cmd, environ);
         printf("error in execve\n");
     }
 }

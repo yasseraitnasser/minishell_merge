@@ -69,18 +69,18 @@ void change_or_append_var_value(char *new_var, int check)
         append_value(new_var, i);
     free(key_var);
 }
-// char * handle_variable(t_line_splited* par, int output)
+// char * handle_variable(t_line_splited* head, int output)
 // {
 
 // }
 
-int create_new_environ(t_line_splited *par, int size)
+int create_new_environ(t_line_splited *head, int size)
 {
     int i;
     int nb;
     char **copy;
     i = 0;
-    nb = count_new_variables(par, size);
+    nb = count_new_variables(head, size);
     printf("new variables : %d\n", nb);
     copy = create_copy(environ, &size);
     environ = malloc(sizeof(char *)*(nb+size+1));
@@ -93,7 +93,7 @@ int create_new_environ(t_line_splited *par, int size)
     return(i);
 }
 
-char **handle_variables(t_line_splited *par)
+char **handle_variables(t_line_splited *head)
 {
     int initial_size;
     int index_of_next_var;
@@ -106,46 +106,46 @@ char **handle_variables(t_line_splited *par)
     duplicated_keys = 0;
     count_added = 0;
     initial_size = size_env(environ);
-    index_of_next_var = create_new_environ(par, initial_size);
+    index_of_next_var = create_new_environ(head, initial_size);
     j = 1;
     
-    while(par->cmd[j])
+    while(head->cmd[j])
     {
         printf("i am index : %d\n", index_of_next_var);
-        if(check_if_valid(par->cmd[j], initial_size, count_added) == 0)//valid
+        if(check_if_valid(head->cmd[j], initial_size, count_added) == 0)//valid
         {
-            check = check_if_add_change_append(par, par->cmd[j], index_of_next_var, &duplicated_keys);
+            check = check_if_add_change_append(head, head->cmd[j], index_of_next_var, &duplicated_keys);
             printf("i am check%d\n", check);
             if(check == 0)//add
             {
-                add_var_if_not_exist(par->cmd[j], initial_size, count_added, check);
+                add_var_if_not_exist(head->cmd[j], initial_size, count_added, check);
                 count_added++;
                 index_of_next_var++;
             }
             else if(check == 1)//change
             {
-                change_or_append_var_value(par->cmd[j], check);
+                change_or_append_var_value(head->cmd[j], check);
             }
             else if(check == 2)//append
             {
-                change_or_append_var_value(par->cmd[j], check);
+                change_or_append_var_value(head->cmd[j], check);
             }
             else if(check == 3)
             {
-                add_var_if_not_exist(par->cmd[j], initial_size, count_added, check);
+                add_var_if_not_exist(head->cmd[j], initial_size, count_added, check);
                 count_added++;
                 index_of_next_var++;
             }
         }
-        else if(check_if_valid(par->cmd[j], initial_size, count_added) == -1)//other like * or = pr $ ...
+        else if(check_if_valid(head->cmd[j], initial_size, count_added) == -1)//other like * or = pr $ ...
         {
-            printf("bash: export: '%s': not a valid identifier", par->cmd[j]);
+            printf("bash: export: '%s': not a valid identifier", head->cmd[j]);
             // err_check = 1;
         }
-        else if(check_if_valid(par->cmd[j], initial_size, count_added) == -3)//#
+        else if(check_if_valid(head->cmd[j], initial_size, count_added) == -3)//#
         {
-            free_matrix(par->cmd);
-            free(par);
+            free_matrix(head->cmd);
+            free(head);
             exit(0);
             //!remember to free all
         }

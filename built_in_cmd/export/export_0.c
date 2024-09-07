@@ -4,15 +4,15 @@
     // si # viene al principio de una variable al centro, guarda los de antes y sale
     // si $ viene al principio y es solo lista export
     // si $ viene con otros variables skip y guarda lo de antes y despues
-void ft_export(t_line_splited *par, int foutput)
+void ft_export(t_line_splited *head, int foutput)
 {
     int i;
     char **export;
 
     i = 0;
-    if(par->cmd[1] == NULL || par->cmd[1][0] == '#')
+    if(head->cmd[1] == NULL || head->cmd[1][0] == '#')
     {
-        export = sort_env(par, environ);
+        export = sort_env(head, environ);
         while(export[i])
         {
             ft_putstr_exp(export[i], foutput);
@@ -22,7 +22,7 @@ void ft_export(t_line_splited *par, int foutput)
         free_matrix(export);
     }
     else
-       environ = handle_variables(par);
+       environ = handle_variables(head);
 }
 
 char **create_copy(char **str, int *size)
@@ -43,14 +43,14 @@ char **create_copy(char **str, int *size)
     return(cp);
 }
 
-void loop_over_env(t_line_splited*par, char **cpy_env, char *small, int *index_of_small, int size_env)
+void loop_over_env(t_line_splited*head, char **cpy_env, char *small, int *index_of_small, int size_env)
 {
     int count;
     int i;
 
     count = 0;
     i = 0;
-    (void)par;
+    (void)head;
     while(i < size_env)
     {
         count++;
@@ -70,7 +70,7 @@ void loop_over_env(t_line_splited*par, char **cpy_env, char *small, int *index_o
     }
 }
 
-void loop(t_line_splited *par, int size_env, char **export, char **cpy_env)
+void loop(t_line_splited *head, int size_env, char **export, char **cpy_env)
 {
     int j;
     int index_of_small;
@@ -81,7 +81,7 @@ void loop(t_line_splited *par, int size_env, char **export, char **cpy_env)
     index_of_small = 0;
     while(j < size_env && environ)
     {
-        loop_over_env(par, cpy_env, small, &index_of_small, size_env);
+        loop_over_env(head, cpy_env, small, &index_of_small, size_env);
         export[j] = ft_join("declare -x ", environ[index_of_small]);
         free(cpy_env[index_of_small]);
         cpy_env[index_of_small]=ft_strdup("0");
@@ -89,7 +89,7 @@ void loop(t_line_splited *par, int size_env, char **export, char **cpy_env)
     }
 }
 
-char **sort_env(t_line_splited *par, char **export)
+char **sort_env(t_line_splited *head, char **export)
 {
     int size_env;
     char **cpy_env;
@@ -99,7 +99,7 @@ char **sort_env(t_line_splited *par, char **export)
     size_env = 0;
     cpy_env = create_copy(environ, &size_env);
     export = malloc(sizeof(char *)*(size_env+1));
-    loop(par, size_env, export, cpy_env);
+    loop(head, size_env, export, cpy_env);
     export[size_env]=NULL;
     free_matrix(cpy_env);
     return(export);

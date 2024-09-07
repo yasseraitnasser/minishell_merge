@@ -149,7 +149,7 @@ void case_go_home()
     }
 }
 
-void handle_absolute_paths(t_line_splited *par)
+void handle_absolute_paths(t_line_splited *head)
 {
     char *current_dir;
     char *var_and_value;
@@ -161,7 +161,7 @@ void handle_absolute_paths(t_line_splited *par)
         write(1, "error\n", 6);
         //perror end
     }
-    if(access(par->cmd[1], X_OK) == -1)
+    if(access(head->cmd[1], X_OK) == -1)
     {
         //error_and_exit
         write(1, "error\n", 6);
@@ -170,7 +170,7 @@ void handle_absolute_paths(t_line_splited *par)
     }
     else
     {
-        if(chdir(par->cmd[1]) == -1)
+        if(chdir(head->cmd[1]) == -1)
         {
             //error message
         }
@@ -180,7 +180,7 @@ void handle_absolute_paths(t_line_splited *par)
             free(current_dir);
             change_variable(var_and_value);
             free(var_and_value);
-            var_and_value = ft_join("PWD=", par->cmd[1]);
+            var_and_value = ft_join("PWD=", head->cmd[1]);
             change_variable(var_and_value);
             free(var_and_value);
         }
@@ -188,22 +188,22 @@ void handle_absolute_paths(t_line_splited *par)
 }
 
 // ay envirement variable kaytzad meah new line ms hana testi b \0 temporairement
-void ft_cd(t_line_splited *par, int output)
+void ft_cd(t_line_splited *head, int output)
 {
-    if(par->cmd[1] == NULL || ft_strcmp(par->cmd[1], ".") == 0)
+    if(head->cmd[1] == NULL || ft_strcmp(head->cmd[1], ".") == 0)
     {
         write(1, "error\n", 6);    
         //free_and_exit_succes();  
     }
-    else if(ft_strcmp(par->cmd[1], "-") == 0)
+    else if(ft_strcmp(head->cmd[1], "-") == 0)
         case_go_back(output);
-    else if(ft_strcmp(par->cmd[1], "..") == 0)
+    else if(ft_strcmp(head->cmd[1], "..") == 0)
         case_go_up();
-    else if(ft_strcmp(par->cmd[1], "~") == 0)
+    else if(ft_strcmp(head->cmd[1], "~") == 0)
         case_go_home();
-    else if(ft_strchr(par->cmd[1], '/' ) == 0)
+    else if(ft_strchr(head->cmd[1], '/' ) == 0)
     {
-        handle_absolute_paths(par);    
+        handle_absolute_paths(head);    
     }
     else
     {

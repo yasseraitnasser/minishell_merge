@@ -27,33 +27,35 @@ int open_heredoc(t_redirection *file)
     return(fd);
 }
 
-void close_all(t_pipe_track *p)
+void close_all(t_cmd_track *c_track)
 {
     int i;
 
     i = 0;
-    if(p->nb_pipes == 0)
+    if(c_track->nb_pipes == 0)
         return;
-    while(i < p->nb_pipes - 1)
+    while(i < c_track->nb_pipes - 1)
     {
-        close(p->fd[i][0]);
-        close(p->fd[i][1]);
+        close(c_track->fd[i][0]);
+        close(c_track->fd[i][1]);
         i++;
     }
 }
 
-void open_pipes(t_pipe_track *p)
+int open_pipes(t_cmd_track *c_track)
 {
     int i;
     
     i = 0;
-    while(i != p->nb_pipes)
+    while(i != c_track->nb_pipes)
     {
-        if(pipe(p->fd[i]) == -1)
+        if(pipe(c_track->fd[i]) == -1)
         {
-            printf("!free and exit");
+            printf("error in while opening a pipe\n");
+            c_track->exit_value = -1;
+            return(-1);       
         }
         i++;
     }
-    
+    return(0);    
 }

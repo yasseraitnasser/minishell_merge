@@ -2,7 +2,7 @@
 
 
 
-int count_new_variables(t_line_splited *par,int size)
+int count_new_variables(t_line_splited *head,int size)
 {
     int i;
     int nb;
@@ -12,14 +12,14 @@ int count_new_variables(t_line_splited *par,int size)
     i = 1;
     nb = 0;
     count = 0;
-    while(par->cmd[i])
+    while(head->cmd[i])
     {
-        if(check_if_valid(par->cmd[i], size, 0) == 0)
+        if(check_if_valid(head->cmd[i], size, 0) == 0)
         {    
-            check = check_if_add_change_append(par, par->cmd[i], size, &count);
+            check = check_if_add_change_append(head, head->cmd[i], size, &count);
             if( check == 0  || check == 3)
             {
-                printf("i am var %s\n", par->cmd[i]);
+                printf("i am var %s\n", head->cmd[i]);
                 nb++;
             }
         }

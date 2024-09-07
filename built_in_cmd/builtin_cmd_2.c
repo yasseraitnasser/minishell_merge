@@ -34,37 +34,35 @@ char *return_value_env_if_exists(char *key)
 }
 
 // handle printing an envirment variable
-void ft_echo(t_line_splited *par, int fd)
+void ft_echo(t_line_splited *head, int fd, t_cmd_track *c_track)
 {
     int i;
 
     i = 1;
-    if(par->cmd[1] == NULL)
+    if(head->cmd[1] == NULL)
         write(fd,"\n",1);
-    else if(ft_strcmp(par->cmd[1], "-n") == 0)
+    else if(ft_strcmp(head->cmd[1], "$?") == 0)
+        printf("%d\n", c_track->exit_value);
+    else if(ft_strcmp(head->cmd[1], "-n") == 0)
     {
-        if(par->cmd[2] != NULL)
+        if(head->cmd[2] != NULL)
         {
             i++;
-            while(par->cmd[i])
+            while(head->cmd[i])
             {
-                ft_putstr(par->cmd[i], fd);
-                if(par->cmd[i+1])
+                ft_putstr(head->cmd[i], fd);
+                if(head->cmd[i+1])
                     write(fd, " ", 1);
                 i++;
             }
         }
     }
-    //! else if()
-    //! {
-        
-    // !}
     else
     {
-        while(par->cmd[i])
+        while(head->cmd[i])
         {
-            ft_putstr(par->cmd[i], fd);
-            if(par->cmd[i+1])
+            ft_putstr(head->cmd[i], fd);
+            if(head->cmd[i+1])
                 write(fd, " ", 1);
             i++;
         }
@@ -104,7 +102,7 @@ void ft_pwd(int fd)
     free(value_pwd);
 }
 
-void ft_unset(t_line_splited *par)
+void ft_unset(t_line_splited *head)
 {
     int i;
     int check;
@@ -113,7 +111,7 @@ void ft_unset(t_line_splited *par)
     int z;
 
     z = 1;
-    while(par->cmd[z])
+    while(head->cmd[z])
     {   
         i = 0;
         j = 0;
@@ -121,7 +119,7 @@ void ft_unset(t_line_splited *par)
         while(environ[i])
         {
             key_env = return_key(environ[i]);
-            if(ft_strcmp(key_env, par->cmd[z]) == 0)
+            if(ft_strcmp(key_env, head->cmd[z]) == 0)
             {
                 check = 1;
                 free(key_env);
