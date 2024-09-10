@@ -1,31 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*   clean_up_ptr.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yait-nas <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: yasser </var/spool/mail/yasser>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/02 21:29:24 by yait-nas          #+#    #+#             */
-/*   Updated: 2024/09/06 03:37:59 by yait-nas         ###   ########.fr       */
+/*   Created: 2024/09/10 09:21:00 by yasser            #+#    #+#             */
+/*   Updated: 2024/09/10 09:21:01 by yasser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*ft_strdup(const char *s1)
+void	free_matrix(char **line_splited)
 {
-	size_t	i;
-	char	*s2;
+	int	i;
 
 	i = 0;
-	s2 = safe_malloc((ft_strlen(s1) + 1) * sizeof(unsigned char));
-	if (s2 == NULL)
-		return (s2);
-	while (s1[i])
+	if (!line_splited)
+		return ;
+	while (line_splited[i])
 	{
-		s2[i] = s1[i];
+		free(line_splited[i]);
 		i++;
 	}
-	s2[i] = '\0';
-	return (s2);
+	free(line_splited);
 }

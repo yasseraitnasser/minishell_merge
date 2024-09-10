@@ -1,7 +1,5 @@
  #include "../../minishell.h"
 
-
-
 int count_new_variables(t_line_splited *par,int size)
 {
     int i;
@@ -92,6 +90,7 @@ char* return_value(char *full_var)
 
     i = 0;
     value = NULL;
+    (void)value;
     while(!full_var && full_var[i] != '\0' && full_var[i] != '=')
     {
         // printf("%c", full_var[i]);

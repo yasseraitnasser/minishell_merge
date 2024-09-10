@@ -20,11 +20,11 @@ int	main(int argc, char **argv, char **env)
 			}
 			add_history(line);
 			if (!parsing(line, &head, env))
-            {
-                execution(head);
-                free_everything(head);
+            		{
+                		execution(head);
+                		free_everything(head);
 				//display_and_free(head, env);
-            }
+            		}
             
 		}
 	}

@@ -6,7 +6,7 @@
 /*   By: yait-nas <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 22:29:40 by yait-nas          #+#    #+#             */
-/*   Updated: 2024/09/02 01:08:40 by yait-nas         ###   ########.fr       */
+/*   Updated: 2024/09/07 16:37:45 by yait-nas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,21 +49,6 @@ void	replace_spaces_with_space(char *str)
 			*str = ' ';
 		str++;
 	}
-}
-
-void	*ft_realloc(void *old, size_t size)
-{
-	void	*new;
-	unsigned char	*tmp1;
-	unsigned char	*tmp2;
-
-	new = safe_malloc(size);
-	tmp1 = (unsigned char *)old;
-	tmp2 = (unsigned char *)new;
-	while (*tmp1)
-		*(tmp2++) = *(tmp1++);
-	*tmp2 = '\0';
-	return (free(old), new);
 }
 
 void	*safe_malloc(size_t size)

@@ -1,31 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*   expand_redirection.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yait-nas <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: yasser </var/spool/mail/yasser>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/02 21:29:24 by yait-nas          #+#    #+#             */
-/*   Updated: 2024/09/06 03:37:59 by yait-nas         ###   ########.fr       */
+/*   Created: 2024/09/10 09:21:21 by yasser            #+#    #+#             */
+/*   Updated: 2024/09/10 09:21:23 by yasser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*ft_strdup(const char *s1)
+void	expand_redirection(t_redirection *head, char **env)
 {
-	size_t	i;
-	char	*s2;
-
-	i = 0;
-	s2 = safe_malloc((ft_strlen(s1) + 1) * sizeof(unsigned char));
-	if (s2 == NULL)
-		return (s2);
-	while (s1[i])
-	{
-		s2[i] = s1[i];
-		i++;
-	}
-	s2[i] = '\0';
-	return (s2);
+	(void)head;
+	(void)env;
 }
