@@ -6,7 +6,7 @@
 /*   By: yasser </var/spool/mail/yasser>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 09:21:21 by yasser            #+#    #+#             */
-/*   Updated: 2024/09/11 11:27:27 by yasser           ###   ########.fr       */
+/*   Updated: 2024/09/11 21:01:37 by yait-nas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,14 +49,14 @@ int	expand_redirection(t_redirection *head, char **env)
 		{
 			old = ft_strdup(head->file_limiter);
 			tmp = head->file_limiter;
-			tmp = expand_and_leave_quotes(tmp, env);
-			hold = ft_split_with_white_spaces(tmp);
+			head->file_limiter = expand_and_leave_quotes(tmp, env);
+			hold = ft_split_with_white_spaces(head->file_limiter);
 			if (how_many_strings(hold) != 1)
 			{
 				printf("minishell: %s: ambiguous redirect\n", old);
 				return (free_matrix(hold), free(old), -1);
 			}
-			free(tmp);
+			free(head->file_limiter);
 			head->file_limiter = rm_quotes_redirection(*hold);
 			free_matrix(hold);
 			free(old);
