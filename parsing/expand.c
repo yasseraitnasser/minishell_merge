@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   perfect_expand.c                                   :+:      :+:    :+:   */
+/*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yait-nas <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 16:25:30 by yait-nas          #+#    #+#             */
-/*   Updated: 2024/09/07 16:34:58 by yait-nas         ###   ########.fr       */
+/*   Updated: 2024/09/11 10:46:34 by yasser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,16 +97,18 @@ char	**rm_quotes(char **cmd)
 	return (free_matrix(cmd), final_result);
 }
 
-void	expand_and_rm_quotes(t_line_splited **head, char **env)
+int	expand_and_rm_quotes(t_line_splited **head, char **env)
 {
 	t_line_splited	*tmp;
 
 	tmp = *head;
 	while (tmp)
 	{
+		if (expand_redirection(tmp->redirection, env))
+			return (-1);
 		expand_cmd(tmp->cmd, env);
 		tmp->cmd = rm_quotes(tmp->cmd);
-		expand_redirection(tmp->redirection, env);
 		tmp = tmp->next;
 	}
+	return (0);
 }

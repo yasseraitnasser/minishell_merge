@@ -6,7 +6,7 @@
 /*   By: yait-nas <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 22:10:43 by yait-nas          #+#    #+#             */
-/*   Updated: 2024/09/06 16:42:58 by yait-nas         ###   ########.fr       */
+/*   Updated: 2024/09/11 10:43:48 by yasser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ int	parsing(char *line, t_line_splited **head, char **env)
 	}
 	set_up_for_execution(head, line);
 	free(line);
-	expand_and_rm_quotes(head, env);
+	if (expand_and_rm_quotes(head, env))
+		return (free_everything(*head), -1);
 	return (0);
 }
