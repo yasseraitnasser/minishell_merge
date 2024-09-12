@@ -98,6 +98,8 @@ int		how_many_strings_in_triple_ptr(char ***ptr);
 char	**join_matrices_ine_one_matrix(char ***tmp);
 int		expand_redirection(t_redirection *head, char **env);
 char	*rm_quotes_redirection(char *str);
+int		not_here_doc_expand(t_redirection *node, char **env);
+void	here_doc_expand(t_redirection *node);
 
 //execution 
 int list_size(t_line_splited *param);
