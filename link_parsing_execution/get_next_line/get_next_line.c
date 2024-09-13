@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elite <elite@student.42.fr>                +#+  +:+       +#+        */
+/*   By: asabir <asabir@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/24 19:01:05 by asabir            #+#    #+#             */
-/*   Updated: 2024/08/29 17:05:01 by elite            ###   ########.fr       */
+/*   Updated: 2024/09/10 15:49:38 by asabir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ char	*read_and_join_helper(char **reserve)
 {
 	char	*buff;
 
-	buff = (char *)malloc((size_t)BUFFER_SIZE + 1);
+	buff = (char *)safe_malloc((size_t)BUFFER_SIZE + 1);
 	if (buff == NULL)
 	{
 		if (*reserve != NULL)
@@ -25,9 +25,7 @@ char	*read_and_join_helper(char **reserve)
 	}
 	if (*reserve == NULL)
 	{
-		*reserve = malloc(1);
-		if (*reserve == NULL)
-			return (NULL);
+		*reserve = safe_malloc(1);
 		(*reserve)[0] = '\0';
 	}
 	return (buff);
@@ -64,9 +62,7 @@ char	*allocate_and_copy(char *reserve, int *j)
 {
 	char	*temp;
 
-	temp = (char *)malloc(sizeof(char) * (*j + 1));
-	if (temp == NULL)
-		return (NULL);
+	temp = (char *)safe_malloc(sizeof(char) * (*j + 1));
 	*j = 0;
 	while (reserve[*j] != '\0')
 	{
@@ -89,12 +85,12 @@ char	*update_reserve(char **reserve, int j, int len)
 	if ((*reserve)[j] != '\0')
 	{
 		len = ft_strlen(*reserve + j);
-		temp = (char *)malloc(sizeof(char) * (len + 1));
+		temp = (char *)safe_malloc(sizeof(char) * (len + 1));
 		if (temp == NULL)
 			return (NULL);
 		temp = ft_strcpy(temp, *reserve + j);
 		free(*reserve);
-		*reserve = (char *)malloc(sizeof(char) * (len + 1));
+		*reserve = (char *)safe_malloc(sizeof(char) * (len + 1));
 		if (*reserve == NULL)
 		{
 			free(temp);

@@ -6,7 +6,7 @@
 /*   By: yait-nas <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 12:31:05 by yait-nas          #+#    #+#             */
-/*   Updated: 2024/09/02 02:13:19 by yait-nas         ###   ########.fr       */
+/*   Updated: 2024/09/11 11:05:34 by yasser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	*ft_strjoin_pro(char *s1, char *s2, char *s3)
 	len1 = ft_strlen(s1);
 	len2 = ft_strlen(s2);
 	len3 = ft_strlen(s3);
-	result = malloc((len1 + len2 + len3 + 1) * sizeof(char));
+	result = safe_malloc((len1 + len2 + len3 + 1) * sizeof(char));
 	if (!result)
 		return (result);
 	ft_strlcpy(result, s1, len1 + 1);

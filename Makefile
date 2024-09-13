@@ -23,11 +23,16 @@ SRC = \
 	link_parsing_execution/manage_pipes_0.c	\
 	link_parsing_execution/manage_pipes_1.c	\
 	handle_errors_and_free/file_1.c			\
-	parsing/parsing.c parsing/execution.c parsing/utils.c \
-	parsing/clean_up.c parsing/ft_split_quotes.c parsing/set_up_for_execution.c \
+	parsing/parsing.c parsing/display.c parsing/utils.c \
+	parsing/clean_up.c parsing/ft_split_quotes.c \
+	parsing/set_up_for_execution.c parsing/expand_cmd.c \
 	parsing/ft_lstadd_line_splited.c parsing/ft_lstadd_redirection.c \
-	parsing/expand.c parsing/ft_strjoin_pro.c parsing/ft_strlcat.c \
-	parsing/ft_strlcpy.c\
+	parsing/expand.c parsing/redirection.c parsing/ft_strlcat.c \
+	parsing/ft_strlcpy.c parsing/char_utils.c parsing/clean_up_ptr.c \
+	parsing/counting_utils.c parsing/expand_redirection.c \
+	parsing/ft_split_with_white_spaces.c parsing/ft_strjoin_pro.c \
+	parsing/ft_strndup.c parsing/search_in_env.c \
+	parsing/something_is_wrong.c \
 	main.c
 
 OBJS = $(SRC:.c=.o)

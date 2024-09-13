@@ -12,16 +12,16 @@
 
 #include "../minishell.h"
 
-char	*ft_strdup(const char *s1)
+char	*ft_strndup(const char *s1, size_t n)
 {
 	size_t	i;
 	char	*s2;
 
 	i = 0;
-	s2 = safe_malloc((ft_strlen(s1) + 1) * sizeof(unsigned char));
+	s2 = safe_malloc((n + 1) * sizeof(unsigned char));
 	if (s2 == NULL)
 		return (s2);
-	while (s1[i])
+	while (s1[i] && i < n)
 	{
 		s2[i] = s1[i];
 		i++;

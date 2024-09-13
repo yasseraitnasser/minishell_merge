@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <sys/stat.h>
+#include <sys/wait.h>
 #include <stdio.h>
 #include <fcntl.h>
 # include <stddef.h>
@@ -44,6 +45,7 @@ typedef struct cmd_track
     char *path_variable;
     char **myenv;
     int exit_value;
+    char *cd_error_message;
 
 } t_cmd_track;
 
@@ -80,17 +82,31 @@ void	clean_each_node(t_line_splited *node);
 void	free_redirection_list(t_redirection *head);
 void	free_line_splited_list(t_line_splited *head);
 void	display(t_line_splited *head);
-void	expand_rm_quotes(t_line_splited **head, char **env);
+int		expand_and_rm_quotes(t_line_splited **head, char **env);
 void	expand_cmd(char **cmd, char **env);
-void	clean_cmd(char **cmd, int index, char **env);
-void	single_quotes_handler(char **tmp, char *new, int *i);
-void	double_quotes_handler(char **tmp, char **new, int *i, char **env);
-void	found_ds_inside_dq(char **tmp, char **new, int *i, char **env);
-char	*search_for_value(char *key, char **env);
 int		is_alphanumeric(char c);
+int		is_digit(char c);
+int		is_space(char c);
+char	*get_key(char **str);
+char	*get_value(char *key, char **env, char **str);
+char	*norminette(char **str);
+char	*ft_strndup(const char *s1, size_t n);
+int		count_words_exam(char const *s);
+int		how_many_strings(char **matrix);
+char	*expand_and_leave_quotes(char *str, char **env);
+void	double_quotes_handler(char **str, char **new, int *i, char **env);
+void	found_dolar_sign(char **str, char **new, int *i, char **env);
+void	single_quotes_handler(char **str, char *new, int *i);
 char	*ft_strjoin_pro(char *s1, char *s2, char *s3);
-size_t	ft_strlcat(char *dst, const char *src, size_t dstsize);
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
+size_t	ft_strlcat(char *dst, const char *src, size_t dstsize);
+char	**ft_split_with_white_spaces(char *s);
+int		how_many_strings_in_triple_ptr(char ***ptr);
+char	**join_matrices_ine_one_matrix(char ***tmp);
+int		expand_redirection(t_redirection *head, char **env);
+char	*rm_quotes_redirection(char *str);
+int		not_here_doc_expand(t_redirection *node, char **env);
+void	here_doc_expand(t_redirection *node);
 
 //execution 
 int list_size(t_line_splited *param);
@@ -128,14 +144,14 @@ char	*get_next_line(int fd);
 char	*ft_strcpy(char *dest, const char *src);
 char	*free_and_join(char **reserve, char *buff);
 int search_cmd(char *cmd, char **path_variable, t_cmd_track *cmd_track);
-void child_process(t_line_splited* head, int infile, int outfile, char *path_variable);
+int child_process(t_line_splited* head, int infile, int outfile, char *path_variable);
 void redirect_cmd(t_line_splited *head, int type, int outfile, t_cmd_track *c_track);
 int cmdType(t_line_splited *head);
 void ft_echo(t_line_splited *head, int fd, t_cmd_track *c_track);
 void ft_env(int fd);
 void ft_pwd(int fd);
 void ft_unset(t_line_splited *head);
-void ft_cd(t_line_splited *head, int output);
+void	ft_cd(t_line_splited *head, t_cmd_track	*c_track, int output);
 void ft_exit();
 void ft_export(t_line_splited *head, int foutput);
 int allocate_array(t_cmd_track *c_track);
@@ -154,4 +170,5 @@ void case_middle_built_in(t_line_splited *head, int infile, int outfile, t_cmd_t
 void case_middle_executable(t_line_splited *head, int infile, int outfile, t_cmd_track *c_track, char *path_variable);
 void case_middle(t_line_splited *head, t_cmd_track *c_track, int infile, int outfile);
 void case_last(t_line_splited *head, t_cmd_track *c_track, int infile, int outfile);
+void change_directory(char *dir_to_access, t_cmd_track *c_track, char *oldpwd);
 #endif

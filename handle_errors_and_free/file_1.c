@@ -1,16 +1,28 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   file_1.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: asabir <asabir@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/10 12:14:02 by asabir            #+#    #+#             */
+/*   Updated: 2024/09/10 12:14:03 by asabir           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-void free_array(t_cmd_track *c_track)
+void	free_array(t_cmd_track *c_track)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    while(i < c_track->nb_pipes)
-    {
-        free(c_track->fd[i]);
-        i++;
-    }
-    free(c_track->fd);
+	i = 0;
+	while (i < c_track->nb_pipes)
+	{
+		free(c_track->fd[i]);
+		i++;
+	}
+	free(c_track->fd);
 }
 
 // void free_matrix(char **str)
@@ -26,10 +38,10 @@ void free_array(t_cmd_track *c_track)
 //     free(str);
 // }
 
-void free_all(t_cmd_track * c_track)
+void	free_all(t_cmd_track *c_track)
 {
-    free_array(c_track);
-    // free(c_track);
+	free_array(c_track);
+	// free(c_track);
 }
 
 // void free_nodes(void *pt)
