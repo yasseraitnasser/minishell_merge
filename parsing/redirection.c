@@ -6,7 +6,7 @@
 /*   By: yasser </var/spool/mail/yasser>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 09:20:38 by yasser            #+#    #+#             */
-/*   Updated: 2024/09/10 09:20:41 by yasser           ###   ########.fr       */
+/*   Updated: 2024/09/23 04:33:27 by yait-nas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ void	fill_up_blank(t_line_splited *empty, int redirection_t, char *tmp)
 	redirection = safe_malloc(sizeof(t_redirection));
 	redirection->redirection_type = redirection_t;
 	redirection->file_limiter = get_file_limiter(tmp);
+	redirection->expand_in_here_doc_flag = 0;
 	redirection->next = NULL;
 	ft_lstadd_redirection(&(empty->redirection), redirection);
 }

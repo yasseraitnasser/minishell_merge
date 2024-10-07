@@ -6,26 +6,27 @@
 /*   By: asabir <asabir@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 12:13:09 by asabir            #+#    #+#             */
-/*   Updated: 2024/09/10 15:44:15 by asabir           ###   ########.fr       */
+/*   Updated: 2024/10/03 23:50:44 by asabir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "minishell.h"
 
-int	main(int argc, char **argv)
+int	g_exit_status_value = 0;
+
+int	main(int argc, char **argv, char **env)
 {
-	char			*line;
-	t_line_splited	*head;
-	t_cmd_track		*c_track;
+	char				*line;
+	t_cmd_track			*c_track;
 
 	c_track = safe_malloc(sizeof(t_cmd_track));
-	c_track->exit_value = 0;
+	set_required_variables(c_track, env);
 	(void)argv;
 	if (argc == 1)
 	{
 		while (1)
 		{
+			set_signals();
 			line = readline("\033[0;33mMINISHELL : \033[0m");
 			if (!line)
 			{
@@ -33,13 +34,10 @@ int	main(int argc, char **argv)
 				break ;
 			}
 			add_history(line);
-			if (!parsing(line, &head, environ))
-			{
-				execution(head, c_track);
-				free_everything(head);
-				// display_and_free(head, env);
-			}
+			minishell(c_track, line);
 		}
+		free_required_variables(c_track);
+		rl_clear_history();
 	}
 	else
 		write(2, "No arguments required!\n", 23);

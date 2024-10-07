@@ -5,48 +5,51 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: asabir <asabir@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/10 12:13:51 by asabir            #+#    #+#             */
-/*   Updated: 2024/09/10 15:47:34 by asabir           ###   ########.fr       */
+/*   Created: 2024/09/29 09:55:39 by asabir            #+#    #+#             */
+/*   Updated: 2024/09/29 10:44:29 by asabir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	ft_putstr(char *str, int fd)
+int	list_size(t_line_splited *head)
 {
 	int	i;
 
 	i = 0;
+	while (head)
+	{
+		i++;
+		head = head->next;
+	}
+	return (i);
+}
+
+void	allocate_array(t_cmd_track *c_track)
+{
+	int	i;
+
+	i = 0;
+	c_track->fd = safe_malloc(sizeof(int *) * (c_track->nb_pipes));
+	while (i < c_track->nb_pipes)
+	{
+		c_track->fd[i] = safe_malloc(sizeof(int) * 2);
+		i++;
+	}
+}
+
+void	ft_putstr_fd(char *str, int fd)
+{
+	int	i;
+
+	i = 0;
+	if (!str)
+		return ;
 	while (str[i])
 	{
 		write(fd, &str[i], 1);
 		i++;
 	}
-}
-void	ft_putstr_exp(char *str, int fd)
-{
-	int	i;
-	int	check;
-
-	i = 0;
-	check = 0;
-	while (str[i])
-	{
-		if (str[i] == '=')
-		{
-			write(fd, &str[i], 1);
-			check = 1;
-			write(fd, "\"", 1);
-			i++;
-		}
-		if (str[i])
-			write(fd, &str[i], 1);
-		else
-			break ;
-		i++;
-	}
-	if (check == 1)
-		write(fd, "\"", 1);
 }
 
 int	ft_strcmp(char *str1, char *str2)
@@ -64,32 +67,4 @@ int	ft_strcmp(char *str1, char *str2)
 			break ;
 	}
 	return (str1[i] - str2[i]);
-}
-
-int	ft_strlen(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		i++;
-	}
-	return (i);
-}
-
-char	*ft_strdup(char *str)
-{
-	char	*cp;
-	int		i;
-
-	i = 0;
-	cp = safe_malloc(sizeof(char) * (ft_strlen(str) + 1));
-	while (str[i])
-	{
-		cp[i] = str[i];
-		i++;
-	}
-	cp[i] = '\0';
-	return (cp);
 }

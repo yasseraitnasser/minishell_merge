@@ -58,8 +58,8 @@ int	redirection_handler(char **str, char c)
 		(*str)++;
 	while (**str == ' ')
 		(*str)++;
-	if (**str == '<' || **str == '|' || **str == '>'
-		|| **str == ';' || **str == '\0')
+	if (**str == '<' || **str == '|' || **str == '>' || **str == ';'
+		|| **str == '\0')
 		return (1);
 	return (0);
 }

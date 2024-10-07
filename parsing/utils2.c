@@ -1,30 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstadd_line_splited.c                           :+:      :+:    :+:   */
+/*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yait-nas <yait-nas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yasser </var/spool/mail/yasser>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/23 12:08:28 by yait-nas          #+#    #+#             */
-/*   Updated: 2024/08/22 20:50:39 by yait-nas         ###   ########.fr       */
+/*   Created: 2024/10/03 10:59:38 by yasser            #+#    #+#             */
+/*   Updated: 2024/10/03 10:59:55 by yasser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	ft_lstadd_line_splited(t_line_splited **lst, t_line_splited *new)
+void	copy_whats_between_quotes(char **str, char c, char *new, int *i)
 {
-	t_line_splited	*tmp;
-
-	if (!lst)
-		return ;
-	if (!*lst)
+	(*str)++;
+	while (**str && **str != c)
 	{
-		*lst = new;
-		return ;
+		new[*i] = **str;
+		(*i)++;
+		(*str)++;
 	}
-	tmp = *lst;
-	while (tmp->next)
-		tmp = tmp->next;
-	tmp->next = new;
+	(*str)++;
 }

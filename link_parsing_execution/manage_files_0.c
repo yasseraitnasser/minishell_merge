@@ -5,133 +5,116 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: asabir <asabir@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/10 12:12:21 by asabir            #+#    #+#             */
-/*   Updated: 2024/09/10 15:41:59 by asabir           ###   ########.fr       */
+/*   Created: 2024/09/17 13:32:01 by asabir            #+#    #+#             */
+/*   Updated: 2024/10/03 23:50:12 by asabir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	case_input(t_line_splited *head, int *outfile, int *infile)
+int	parse_file_helper(t_cmd_track *c_track, t_redirection *tmp, int *infile,
+		int *outfile)
 {
-	char* file_name;
-
-	if (*infile != 0)
-		close(*infile);
-	*infile = open(head->redirection->file_limiter, O_RDONLY, 0744);
-	if (*infile == -1)
+	if (tmp->redirection_type == 2)
 	{
-		file_name = ft_join(head->redirection->file_limiter, ": ");
-		while (head->redirection)
+		if (case_heredoc(tmp, c_track, infile) == -1)
 		{
-			if (head->redirection->redirection_type == 2) //input heredoc
-				*infile = open_heredoc(head->redirection);
-			head->redirection = head->redirection->next;
+			if (g_exit_status_value == 130)
+				c_track->leave = 1;
+			return (-1);
 		}
-		ft_putstr("minishell: ", 2);
-		ft_putstr(file_name,2);
-		free(file_name);
-		perror(NULL);
-		if (*outfile != 1)
-			close(*outfile);
-		return (-1);
+	}
+	else if (tmp->redirection_type == 3)
+	{
+		if (case_normal_output(tmp, outfile) == -1)
+			return (-1);
+	}
+	else
+	{
+		if (case_append_output(tmp, outfile) == -1)
+			return (-1);
 	}
 	return (0);
 }
 
-int	case_heredoc(t_line_splited *head, int *infile)
+int	parse_files_of_a_single_node(t_line_splited *head, t_cmd_track *c_track,
+		int *infile, int *outfile)
 {
-	int	fd;
-	char *file_name;
+	t_redirection	*tmp;
+
+	tmp = head->redirection;
+	update_exit_status(head);
+	while (tmp)
+	{
+		if (tmp->redirection_type == 1)
+		{
+			if (case_input(tmp, c_track, infile) == -1)
+				return (-1);
+		}
+		else if (parse_file_helper(c_track, tmp, infile, outfile) == -1)
+			return (-1);
+		tmp = tmp->next;
+	}
+	return (0);
+}
+
+int	case_input_helper(t_cmd_track *c_track, int *fd, t_redirection *redirection,
+		char *file_name)
+{
+	*fd = open_heredoc(c_track, redirection);
+	if (*fd == -1)
+		return (free(file_name), -1);
+	close(*fd);
+	*fd = 1;
+	return (0);
+}
+
+int	case_input(t_redirection *redirection, t_cmd_track *c_track, int *infile)
+{
+	int		fd;
+	char	*file_name;
 
 	if (*infile != 0)
 		close(*infile);
-	*infile = open_heredoc(head->redirection);
-	if (*infile == -1)
-	{
-		file_name = ft_join(head->redirection->file_limiter, ": ");
-		ft_putstr("minishell: ", 2);
-		ft_putstr(file_name, 2);
-		free(file_name);
-		perror(NULL);
-		return (-1);
-	}
-	close(*infile);
-	fd = open("heredoc", O_RDWR, 0744);
+	fd = open(redirection->file_limiter, O_RDONLY, 0644);
 	if (fd == -1)
 	{
-		perror("minishell :");
-		return (-1);
-	}
-	return (0);
-}
-
-int	case_normal_output(t_line_splited *head, int *outfile)
-{
-	char *file_name;
-
-	if (*outfile != 1)
-		close(*outfile);
-	*outfile = open(head->redirection->file_limiter, O_CREAT | O_RDWR | O_TRUNC,
-			0744);
-	if (*outfile == -1)
-	{
-		file_name = ft_join(head->redirection->file_limiter, ": ");
-		ft_putstr("minishell: ", 2);
-		ft_putstr(file_name, 2);
+		file_name = ft_strdup(redirection->file_limiter);
+		while (redirection)
+		{
+			if (redirection->redirection_type == 2)
+			{
+				if (case_input_helper(c_track, &fd, redirection,
+						file_name) == -1)
+					return (-1);
+			}
+			redirection = redirection->next;
+		}
+		my_perror(NULL, file_name, 1);
 		free(file_name);
-		perror(NULL);
 		return (-1);
 	}
+	*infile = fd;
 	return (0);
 }
 
-int	case_append_output(t_line_splited *head, int *outfile)
+int	case_heredoc(t_redirection *redirection, t_cmd_track *c_track, int *infile)
 {
-	char *file_name;
+	int	fd;
 
-	if (*outfile != 1)
-		close(*outfile);
-	*outfile = open(head->redirection->file_limiter,
-			O_CREAT | O_RDWR | O_APPEND, 0744);
-	if (*outfile == -1)
+	if (*infile != 0)
+		close(*infile);
+	fd = open_heredoc(c_track, redirection);
+	if (fd == -1)
+		return (-1);
+	close(fd);
+	fd = open(c_track->name_heredoc, O_RDWR, 0744);
+	if (fd == -1)
 	{
-		file_name = ft_join(head->redirection->file_limiter, ": ");
-		ft_putstr("minishell: ", 2);
-		ft_putstr(file_name, 2);
-		free(file_name);
-		perror(NULL);
+		custom_error("minishell: error in opening file descriptor\n", 1);
 		return (-1);
 	}
-	return (0);
-}
-
-// if there is input file without < then others with it we take that first
-int	parse_files(t_line_splited *head, int *outfile, int *infile)
-{
-	while (head->redirection)
-	{
-		if (head->redirection->redirection_type == 1) // input
-		{
-			if (case_input(head, outfile, infile) == -1)
-				return (-1);
-		}
-		else if (head->redirection->redirection_type == 2) // input heredoc
-		{
-			if (case_heredoc(head, infile) == -1)
-				return (-1);
-		}
-		else if (head->redirection->redirection_type == 3) // output
-		{
-			if (case_normal_output(head, outfile) == -1)
-				return (-1);
-		}
-		else if (head->redirection->redirection_type == 4) // output append
-		{
-			if (case_append_output(head, outfile) == -1)
-				return (-1);
-		}
-		head->redirection = head->redirection->next;
-	}
+	*infile = fd;
+	free(c_track->name_heredoc);
 	return (0);
 }

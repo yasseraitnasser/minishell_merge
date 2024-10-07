@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   search_in_env.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yasser </var/spool/mail/yasser>            +#+  +:+       +#+        */
+/*   By: asabir <asabir@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 09:21:31 by yasser            #+#    #+#             */
-/*   Updated: 2024/09/10 09:21:33 by yasser           ###   ########.fr       */
+/*   Updated: 2024/10/03 10:58:34 by yasser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,6 @@ char	*get_key(char **str)
 	return (key);
 }
 
-char	*norminette(char **str)
-{
-	(*str)++;
-	return (ft_strdup("$?"));
-}
-
 char	*get_value(char *key, char **env, char **str)
 {
 	int		i;
@@ -54,7 +48,7 @@ char	*get_value(char *key, char **env, char **str)
 
 	i = 0;
 	if (*key == '?')
-		return (norminette(str));
+		return (norminette1(str));
 	while (env[i])
 	{
 		j = 0;

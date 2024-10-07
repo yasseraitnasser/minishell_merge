@@ -1,35 +1,48 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   char_utils.c                                       :+:      :+:    :+:   */
+/*   norminette.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yasser </var/spool/mail/yasser>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/10 09:20:28 by yasser            #+#    #+#             */
-/*   Updated: 2024/09/22 23:10:29 by yait-nas         ###   ########.fr       */
+/*   Created: 2024/10/03 10:53:39 by yasser            #+#    #+#             */
+/*   Updated: 2024/10/03 10:56:24 by yasser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	is_space(char c)
+char	*norminette1(char **str)
 {
-	if ((c >= 9 && c <= 13) || c == ' ')
-		return (1);
-	return (0);
+	(*str)++;
+	return (ft_itoa(g_exit_status_value));
 }
 
-int	is_digit(char c)
+void	norminette2(char c, char *new, int *i, char **tmp)
 {
-	if (c >= '0' && c <= '9')
-		return (1);
-	return (0);
+	int	x;
+
+	if (c == -1)
+	{
+		x = *i;
+		new[x] = '"';
+		(*i)++;
+	}
+	if (c == -2)
+	{
+		x = *i;
+		new[x] = '\'';
+		(*i)++;
+	}
+	(*tmp)++;
 }
 
-int	is_alphanumeric(char c)
+void	norminette3(char **str, int *i, char **new)
 {
-	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0'
-			&& c <= '9') || c == '_')
-		return (1);
-	return (0);
+	int	tmp;
+
+	tmp = *i;
+	new[0][*i] = **str;
+	(*i)++;
+	(*str)++;
 }

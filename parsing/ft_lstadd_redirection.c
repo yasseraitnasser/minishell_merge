@@ -26,5 +26,5 @@ void	ft_lstadd_redirection(t_redirection **lst, t_redirection *new)
 	tmp = *lst;
 	while (tmp->next)
 		tmp = tmp->next;
-	tmp -> next = new;
+	tmp->next = new;
 }

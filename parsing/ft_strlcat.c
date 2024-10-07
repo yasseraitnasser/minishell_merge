@@ -19,7 +19,7 @@ size_t	ft_strlcat(char *dst, const char *src, size_t dstsize)
 	size_t	dstlen;
 
 	i = 0;
-	srclen = 0 ;
+	srclen = 0;
 	dstlen = 0;
 	while (src[srclen])
 		srclen++;

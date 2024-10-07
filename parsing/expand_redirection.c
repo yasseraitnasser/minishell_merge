@@ -3,68 +3,76 @@
 /*                                                        :::      ::::::::   */
 /*   expand_redirection.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yasser </var/spool/mail/yasser>            +#+  +:+       +#+        */
+/*   By: asabir <asabir@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 09:21:21 by yasser            #+#    #+#             */
-/*   Updated: 2024/09/12 02:26:50 by yait-nas         ###   ########.fr       */
+/*   Updated: 2024/10/04 17:58:44 by yait-nas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*rm_quotes_redirection(char *str)
+void	last_but_not_least_redirection(char **matrix)
 {
-	char	*new;
-	char	*tmp;
-	int		i;
-	char	c;
+	int	i;
 
-	new = safe_malloc(ft_strlen(str) + 1);
-	tmp = str;
 	i = 0;
+	while (matrix[i])
+	{
+		matrix[i] = rm_quotes_redirection(matrix[i]);
+		i++;
+	}
+}
+
+void	here_doc_expand(t_redirection *node)
+{
+	char	*tmp;
+	char	*new;
+	int		i;
+
+	i = 0;
+	tmp = node->file_limiter;
+	new = safe_malloc(ft_strlen(tmp) + 1);
 	while (*tmp)
 	{
-		if (*tmp == '"' || *tmp == '\'')
+		if (*tmp == '$')
 		{
-			c = *tmp;
-			tmp++;
-			while (*tmp != c)
-				new[i++] = *(tmp++);
+			if (is_alphanumeric(*(tmp + 1)))
+				new[i++] = *tmp;
 			tmp++;
 		}
 		else
 			new[i++] = *(tmp++);
 	}
 	new[i] = '\0';
-	return (new);
+	tmp = node->file_limiter;
+	node->file_limiter = rm_quotes_redirection_heredoc(new, node);
+	free(new);
+	free(tmp);
 }
 
-void	here_doc_expand(t_redirection *node)
-{
-	char	*hold;
-
-	hold = node->file_limiter;
-	node->file_limiter = rm_quotes_redirection(node->file_limiter);
-	free(hold);
-}
-
-int	not_here_doc_expand(t_redirection *node, char **env)
+int	non_here_doc_expand(t_redirection *node, char **env)
 {
 	char	*tmp;
 	char	*old;
 	char	**hold;
+	int		i;
+	char	*str;
 
+	i = 0;
+	str = NULL;
 	old = ft_strdup(node->file_limiter);
 	tmp = node->file_limiter;
-	node->file_limiter = expand_and_leave_quotes(tmp, env);
+	node->file_limiter = expand_and_leave_quotes(tmp, env, i, str);
 	hold = ft_split_with_white_spaces(node->file_limiter);
 	if (how_many_strings(hold) != 1)
 	{
 		printf("minishell: %s: ambiguous redirect\n", old);
 		return (free_matrix(hold), free(old), -1);
 	}
+	last_but_not_least_redirection(hold);
 	free(node->file_limiter);
-	node->file_limiter = rm_quotes_redirection(*hold);
+	node->file_limiter = ft_strdup(*hold);
 	return (free_matrix(hold), free(old), 0);
 }
 
@@ -76,7 +84,7 @@ int	expand_redirection(t_redirection *head, char **env)
 			here_doc_expand(head);
 		else
 		{
-			if (not_here_doc_expand(head, env))
+			if (non_here_doc_expand(head, env))
 				return (-1);
 		}
 		head = head->next;
