@@ -6,7 +6,7 @@
 /*   By: asabir <asabir@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 13:35:23 by asabir            #+#    #+#             */
-/*   Updated: 2024/10/05 20:08:52 by asabir           ###   ########.fr       */
+/*   Updated: 2024/10/08 20:45:51 by asabir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,5 +103,6 @@ void	last_case(t_line_splited **head, t_cmd_track *c_track)
 		}
 	}
 	close_files_after_use(infile, outfile, c_track, 0);
+	close(c_track->fd[c_track->i][0]);
 	*head = (*head)->next;
 }

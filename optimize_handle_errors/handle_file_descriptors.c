@@ -6,7 +6,7 @@
 /*   By: asabir <asabir@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 00:25:33 by asabir            #+#    #+#             */
-/*   Updated: 2024/10/02 04:15:26 by asabir           ###   ########.fr       */
+/*   Updated: 2024/10/08 20:46:00 by asabir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,10 @@ void	close_files_after_use(int infile, int outfile, t_cmd_track *c_track,
 	if (c_track->nb_pipes != 0)
 	{
 		if (check_if_middle == 1)
+		{
 			close(c_track->fd[c_track->i + 1][1]);
+			close(c_track->fd[c_track->i][0]);
+		}
 		else
 			close(c_track->fd[c_track->i][1]);
 	}
@@ -75,7 +78,7 @@ void	close_fds(t_cmd_track *c_track, int infile, int outfile)
 	}
 }
 
-void	close_all(t_cmd_track *c_track) //! rj3i
+void	close_all(t_cmd_track *c_track)
 {
 	int	i;
 

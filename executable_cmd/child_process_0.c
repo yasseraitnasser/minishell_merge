@@ -6,7 +6,7 @@
 /*   By: asabir <asabir@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 21:06:11 by asabir            #+#    #+#             */
-/*   Updated: 2024/10/05 20:18:41 by asabir           ###   ########.fr       */
+/*   Updated: 2024/10/08 20:36:22 by asabir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ int	child_process(t_line_splited *head, int infile, int outfile,
 		my_perror(NULL, NULL, 1);
 	if (id == 0)
 	{
+		close_fds(c_track, infile, outfile);
 		if (dup2(outfile, STDOUT_FILENO) == -1)
 			ft_perror(NULL);
 		if (outfile != 1)
@@ -51,7 +52,6 @@ int	child_process(t_line_splited *head, int infile, int outfile,
 			ft_perror(NULL);
 		if (infile != 0)
 			close(infile);
-		close_fds(c_track, infile, outfile);
 		execve(c_track->path_variable, head->cmd, c_track->myenv);
 		free_array(c_track->fd, c_track->nb_pipes);
 		my_perror(NULL, c_track->path_variable, 0);
